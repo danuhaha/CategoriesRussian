@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Connections",
-  description: "Group four groups of four!",
+  title: "Категории",
+  description: "Составь 4 группы по 4 слова!",
 };
 
 export default function RootLayout({

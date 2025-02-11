@@ -49,14 +49,14 @@ export default function Home() {
 
     switch (result.result) {
       case "same":
-        showPopup("You've already guessed that!");
+        showPopup("Уже было!");
         break;
       case "one-away":
         animateWrongGuess();
-        showPopup("One away...");
+        showPopup("Один лишний...");
         break;
       case "loss":
-        showPopup("Better luck next time!");
+        showPopup("Повезет в другой раз!");
         await handleLoss();
         setShowGameLostModal(true);
         break;
@@ -82,7 +82,7 @@ export default function Home() {
   const renderControlButtons = () => {
     const showResultsWonButton = (
       <ControlButton
-        text="Show Results"
+        text="Показать результаты"
         onClick={() => {
           setShowGameWonModal(true);
         }}
@@ -91,7 +91,7 @@ export default function Home() {
 
     const showResultsLostButton = (
       <ControlButton
-        text="Show Results"
+        text="Показать результаты"
         onClick={() => {
           setShowGameLostModal(true);
         }}
@@ -101,17 +101,17 @@ export default function Home() {
     const inProgressButtons = (
       <div className="flex gap-2 mb-12">
         <ControlButton
-          text="Shuffle"
+          text="Перемешать"
           onClick={shuffleWords}
           unclickable={submitted}
         />
         <ControlButton
-          text="Deselect All"
+          text="Отменить выбор"
           onClick={deselectAllWords}
           unclickable={selectedWords.length === 0 || submitted}
         />
         <ControlButton
-          text="Submit"
+          text="Проверить"
           unclickable={selectedWords.length !== 4 || submitted}
           onClick={handleSubmit}
         />
@@ -131,10 +131,10 @@ export default function Home() {
     <>
       <div className="flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14">
         <h1 className="text-black text-4xl font-semibold my-4 ml-4">
-          Connections
+          Категории
         </h1>
         <hr className="mb-4 md:mb-4 w-full"></hr>
-        <h1 className="text-black mb-4">Create four groups of four!</h1>
+        <h1 className="text-black mb-4">Составь 4 группы по 4 слова!</h1>
         <div className="relative w-full">
           <Popup show={popupState.show} message={popupState.message} />
           <Grid
@@ -147,7 +147,7 @@ export default function Home() {
           />
         </div>
         <h2 className="text-black my-4 md:my-8 mx-8">
-          Mistakes Remaining:{" "}
+          Попыток осталось:{" "}
           {mistakesRemaining > 0 ? Array(mistakesRemaining).fill("•") : ""}
         </h2>
         {renderControlButtons()}
