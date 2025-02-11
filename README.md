@@ -1,17 +1,17 @@
-# NYT Connections Clone
+# Connections in Russian
 
-Clone of the Connections game from the New York Times, written using Next.js.
+Russian adaptation of the Connections game, written using Next.js.
 
 ## Installing locally
 
 For those interested in running the app locally, first clone the repository:
 ```bash
-git clone https://github.com/srefsland/nyt-connections-clone.git
+git clone https://github.com/danuhaha/ConnectionsRussian.git
 ```
 
 Install dependencies:
 ```bash
-cd nyt-connections-clone
+cd ConnectionsRussian
 npm install
 ```
 
