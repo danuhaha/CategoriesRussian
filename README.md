@@ -21,7 +21,3 @@ npm run dev
 ```
 
 The development server is now live at http://localhost:3000.
-
-## License
-
-This project is released under the [MIT License](LICENSE.md).
