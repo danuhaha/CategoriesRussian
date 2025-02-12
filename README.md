@@ -1,4 +1,4 @@
-# Connections in Russian
+# Categories
 
 Russian analogue of the Connections game, written using Next.js.
 
