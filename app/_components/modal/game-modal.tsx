@@ -39,6 +39,7 @@ export default function GameModal(props: GameModalProps) {
     <dialog
       ref={dialogRef}
       onClick={handleClickOutside}
+      style={{ backgroundColor: '#faf9f6' }}
       className={`backdrop:bg-black backdrop:opacity-75 rounded-md p-8`}
     >
       {props.children}
