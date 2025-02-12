@@ -106,7 +106,7 @@ export default function Home() {
           unclickable={submitted}
         />
         <ControlButton
-          text="Отменить выбор"
+          text="Сбросить"
           onClick={deselectAllWords}
           unclickable={selectedWords.length === 0 || submitted}
         />
