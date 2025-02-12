@@ -10,9 +10,9 @@ function Popup(props: PopupProps) {
     return null;
   } else {
     return (
-      <div className="absolute inset-x-0 -top-20 px-3 py-2 bg-black text-white rounded-lg mx-auto text-center max-w-max">
-        {props.message}
-      </div>
+        <div className="absolute left-1/2 transform -translate-x-1/2 top-[58px] px-2 py-1 text-sm bg-black bg-opacity-70 text-white rounded-lg mx-auto text-center max-w-max">
+          {props.message}
+        </div>
     );
   }
 }
