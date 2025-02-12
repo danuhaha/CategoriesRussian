@@ -148,7 +148,7 @@ export default function Home() {
         </div>
         <h2 className="text-black my-4 md:my-8 mx-8">
           Попыток осталось:{" "}
-          {mistakesRemaining > 0 ? Array(mistakesRemaining).fill("•") : ""}
+          {mistakesRemaining > 0 ? Array(mistakesRemaining).fill("✦") : ""}
         </h2>
         {renderControlButtons()}
       </div>
