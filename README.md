@@ -1,17 +1,17 @@
 # Connections in Russian
 
-Russian adaptation of the Connections game, written using Next.js.
+Russian analogue of the Connections game, written using Next.js.
 
 ## Installing locally
 
 For those interested in running the app locally, first clone the repository:
 ```bash
-git clone https://github.com/danuhaha/ConnectionsRussian.git
+git clone https://github.com/danuhaha/CategoriesRussian.git
 ```
 
 Install dependencies:
 ```bash
-cd ConnectionsRussian
+cd CategoriesRussian
 npm install
 ```
 
