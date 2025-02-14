@@ -134,12 +134,12 @@ export default function Home() {
         <title>Категории — Игра</title>
         <meta property="og:title" content="Категории" />
         <meta property="og:description" content="Составь 4 группы по 4 слова!" />
-        <meta property="og:image" content="/public/og-image.jpg" />
+        <meta property="og:image" content="/og-image.png" />
         <meta property="og:url" content="https://iluvurmom.servebeer.com" />
         <meta property="og:type" content="website" />
 
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       </Head>
 
       <div className="flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14 relative">
