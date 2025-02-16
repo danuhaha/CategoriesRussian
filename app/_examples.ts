@@ -3,7 +3,7 @@ import { Category } from "./_types";
 export const categories: Category[] = [
   {
     category: 'ЛАСКОВЫЕ КЛИЧКИ',
-    items: ["ЗОЛТО", "КОТИК", "МАЛЫШ", "СОЛНЦЕ"],
+    items: ["ЗОЛОТО", "КОТИК", "МАЛЫШ", "ЗАЯЦ"],
     level: 1,
   },
   {
