@@ -9,7 +9,7 @@ export const categories: Category[] = [
   {
     category: "ЧЕТЫРЕ",
     items: ["ЧЕРЕПАХА", "СЕЗОН", "ЕВАНГЕЛИЕ", "ЛАПА"],
-    level: 4,
+    level: 2,
   },
   {
     category: "МАСТИ В ТАРО",
@@ -19,6 +19,6 @@ export const categories: Category[] = [
   {
     category: "ДРЕВНЕРУССКИЕ БУКВЫ",
     items: ["ДОБРО", "ЛЮДИ", "ЕСТЬ", "ЗЕМЛЯ"],
-    level: 2,
+    level: 4,
   },
 ];
