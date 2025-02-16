@@ -11,6 +11,25 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Категории",
   description: "Составь 4 группы по 4 слова!",
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: 'Категории',
+    description: 'Составь 4 группы по 4 слова!',
+    url: 'https://iluvurmom.servebeer.com/categories',
+    siteName: 'Категории',
+    images: [
+      {
+        url: 'https://iluvurmom.servebeer.com/categories/opengraph-image.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'ru',
+    type: 'website',
+  },
+
 };
 
 export default function RootLayout({
