@@ -12,9 +12,6 @@ export const metadata: Metadata = {
   title: "Категории",
   description: "Составь 4 группы по 4 слова!",
   metadataBase: new URL("https://iluvurmom.servebeer.com/categories"),
-  icons: {
-    icon: '/favicon.ico',
-  },
   openGraph: {
     title: 'Категории',
     description: 'Составь 4 группы по 4 слова!',
