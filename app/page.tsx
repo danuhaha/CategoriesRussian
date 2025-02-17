@@ -140,7 +140,7 @@ export default function Home() {
               className="relative top-0 right-0 mt-1 ml-2 w-6 h-6 border-2 border-black rounded-full bg-transparent flex justify-center items-center"
               onClick={() => setShowGameRulesModal(true)}
           >
-            <span className="text-lg font-bold text-black">i</span>
+            <span className="text-lg font-bold text-black">?</span>
           </button>
         </div>
         <hr className="mb-4 md:mb-4 w-full" />
