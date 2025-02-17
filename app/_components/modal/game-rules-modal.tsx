@@ -9,8 +9,8 @@ type GameRulesProps = {
 export default function GameWonModal(props: GameRulesProps) {
     return (
         <GameModal isOpen={props.isOpen} onClose={props.onClose}>
-            <div className="flex flex-col items-center justify-center px-4">
-                <h1 className="text-black text-3xl font-black my-4 self-center">
+            <div className="flex flex-col items-center justify-center px-0">
+                <h1 className="text-black text-3xl font-black mb-4 mt-0 self-center">
                     {"Правила игры"}
                 </h1>
                 <div className="self-start">
@@ -41,7 +41,7 @@ export default function GameWonModal(props: GameRulesProps) {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center mb-4">
                             <span className="text-black text-sm mb-1 self-start">Легко</span>
                             <div className="self-start px-3.5">
                                 <svg width="12" height="65" viewBox="0 0 12 40" fill="none" xmlns="http://www.w3.org/2000/svg">

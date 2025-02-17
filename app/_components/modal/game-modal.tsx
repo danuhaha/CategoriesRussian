@@ -14,7 +14,11 @@ export default function GameModal(props: GameModalProps) {
   // Open close
   React.useEffect(() => {
     if (props.isOpen) {
-      dialogRef.current?.showModal();
+      const dialog = dialogRef.current;
+      if (dialog) {
+        dialog.showModal();
+        dialog.scrollTop = 0; // Ensure it scrolls to top
+      }
     } else {
       dialogRef.current?.close();
     }
