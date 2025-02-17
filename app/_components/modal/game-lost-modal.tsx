@@ -18,7 +18,7 @@ export default function GameLostModal(props: GameLostModalProps) {
         </h1>
         <hr className="mb-2 md:mb-4 w-full"></hr>
         <GuessHistory guessHistory={props.guessHistory} />
-        <ControlButton text="Выйти" onClick={props.onClose} />
+        <ControlButton text="Закрыть" onClick={props.onClose} />
       </div>
     </GameModal>
   );

@@ -11,6 +11,7 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Категории",
   description: "Составь 4 группы по 4 слова!",
+  metadataBase: new URL("https://iluvurmom.servebeer.com/categories"),
   icons: {
     icon: '/favicon.ico',
   },
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     siteName: 'Категории',
     images: [
       {
-        url: 'https://iluvurmom.servebeer.com/categories/opengraph-image.png',
+        url: '/opengraph-image.png',
         width: 1200,
         height: 630,
       },

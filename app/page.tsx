@@ -5,6 +5,7 @@ import ControlButton from "./_components/button/control-button";
 import Grid from "./_components/game/grid";
 import GameLostModal from "./_components/modal/game-lost-modal";
 import GameWonModal from "./_components/modal/game-won-modal";
+import GameRulesModal from "./_components/modal/game-rules-modal";
 import Popup from "./_components/popup";
 import useAnimation from "./_hooks/use-animation";
 import useGameLogic from "./_hooks/use-game-logic";
@@ -32,6 +33,7 @@ export default function Home() {
 
   const [showGameWonModal, setShowGameWonModal] = useState(false);
   const [showGameLostModal, setShowGameLostModal] = useState(false);
+  const [showGameRulesModal, setShowGameRulesModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const {
@@ -130,9 +132,17 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14 relative">
-        <h1 className="text-black text-4xl font-semibold my-4 ml-4">
-          Категории
-        </h1>
+        <div className="flex items-center my-4 ml-4">
+          <h1 className="text-black text-4xl font-semibold">
+            Категории
+          </h1>
+          <button
+              className="relative top-0 right-0 mt-1 ml-2 w-6 h-6 border-2 border-black rounded-full bg-transparent flex justify-center items-center"
+              onClick={() => setShowGameRulesModal(true)}
+          >
+            <span className="text-lg font-bold text-black">i</span>
+          </button>
+        </div>
         <hr className="mb-4 md:mb-4 w-full" />
         <Popup show={popupState.show} message={popupState.message} />
         <h1 className="text-black mb-4">Составь 4 группы по 4 слова!</h1>
@@ -163,6 +173,12 @@ export default function Home() {
         onClose={() => setShowGameLostModal(false)}
         guessHistory={guessHistoryRef.current}
       />
+      {showGameRulesModal && (
+          <GameRulesModal
+              isOpen={showGameRulesModal}
+              onClose={() => setShowGameRulesModal(false)}
+          />
+      )}
     </>
   );
 }
