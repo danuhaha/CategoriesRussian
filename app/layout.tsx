@@ -11,11 +11,11 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Категории",
   description: "Составь 4 группы по 4 слова!",
-  metadataBase: new URL("https://iluvurmom.servebeer.com/categories"),
+  metadataBase: new URL("https://onthewifi.com/categories"),
   openGraph: {
     title: 'Категории',
     description: 'Составь 4 группы по 4 слова!',
-    url: 'https://iluvurmom.servebeer.com/categories',
+    url: 'https://onthewifi.com/categories',
     siteName: 'Категории',
     images: [
       {
