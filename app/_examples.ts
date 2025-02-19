@@ -7,7 +7,7 @@ export const categories: Category[] = [
     level: 1,
   },
   {
-    category: "ПЕРСОНАЖИ ШРЕКА",
+    category: "ПЕРСОНАЖИ ИЗ ШРЕКА",
     items: ["ОСЁЛ", "ПРЯНИК", "МАРИОНЕТКА", "КОТ"],
     level: 2,
   },
