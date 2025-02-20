@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   description: "Составь 4 группы по 4 слова!",
   metadataBase: new URL("https://games.onthewifi.com/categories"),
   icons: {
-    icon: '/icon.ico',  
-    apple: '/apple-icon.png',  
+    icon: '/categories/icon.ico',  
+    apple: '/categories/apple-icon.png',  
   },
   openGraph: {
     title: 'Категории',
