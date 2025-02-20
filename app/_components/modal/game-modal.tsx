@@ -18,9 +18,9 @@ export default function GameModal(props: GameModalProps) {
       if (dialog) {
         dialog.showModal();
         dialog.style.overflowY = 'auto';
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           dialog.scrollTop = 0;
-        }, 100);
+        });
       }
     } else {
       dialogRef.current?.close();
