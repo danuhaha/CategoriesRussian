@@ -22,12 +22,36 @@ export default function Cell(props: CellProps) {
     ? "animate-horizontal-shake"
     : "";
 
+  // Count characters in the word
+  const charCount = props.cellValue.word.length;
+  let size = "text-sm";
+  let sizeXXS = "text-sm";
+  let sizeXS = "text-sm";
+  let sizeMD = "text-lg";
+
+  if (charCount > 5 && charCount <= 7) {
+    size = "text-xs";
+    sizeXXS = "text-sm";
+    sizeXS = "text-sm";
+
+  }
+  if (charCount > 7 && charCount <= 8) {
+    size = "text-xxs";
+    sizeXXS = "text-xs";
+    sizeXS = "text-sm";
+  }
+  if (charCount > 8) {
+    size = "text-xxxs";
+    sizeXXS = "text-xxs";
+    sizeXS = "text-xs";
+  }
+
   return (
     <button
       className={`${bgColor} py-6 rounded-md break-all px-1 transition ease-in-out ${guessAnimation} ${wrongGuessAnimation}`}
       onClick={handleClick}
     >
-      <h2 className={`${textColor} text-xxxs xxs:text-xxs xs:text-xs md:text-lg text-center font-bold`}>
+      <h2 className={`${textColor} ${size} xxs:${sizeXXS} xs:${sizeXS} md:${sizeMD} text-center font-bold`}>
         {props.cellValue.word.toUpperCase()}
       </h2>
     </button>
