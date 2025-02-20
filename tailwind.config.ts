@@ -14,9 +14,13 @@ const config: Config = {
         category3: 'var(--color-category3)',
         category4: 'var(--color-category4)',
       },
+      screens: {
+        'xs': '440px',
+        'xxs': '380px',
+      },
       fontSize: {
-        'xxs': '10px',  // Custom extra-extra-small font size
-        'xxxs': '8px',   // Super tiny font
+        'xxs': '10px',
+        'xxxs': '8px',
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
