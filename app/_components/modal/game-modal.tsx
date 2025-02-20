@@ -17,7 +17,10 @@ export default function GameModal(props: GameModalProps) {
       const dialog = dialogRef.current;
       if (dialog) {
         dialog.showModal();
-        dialog.scrollTop = 0; // Ensure it scrolls to top
+        dialog.style.overflowY = 'auto';
+        setTimeout(() => {
+          dialog.scrollTop = 0;
+        }, 100);
       }
     } else {
       dialogRef.current?.close();
