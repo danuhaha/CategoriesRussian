@@ -13,7 +13,7 @@ export const categories: Category[] = [
   },
   {
     category: "КАМЕННЫЕ",
-    items: ["ЧЕЛОВЕК", "ВЕК", "ЛЕДИ", "ДОРОГА"],
+    items: ["СЕРДЦЕ", "ВЕК", "ЛЕДИ", "ДОРОГА"],
     level: 3,
   },
   {
