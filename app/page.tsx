@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import ControlButton from "./_components/button/control-button";
 import Grid from "./_components/game/grid";
 import GameLostModal from "./_components/modal/game-lost-modal";
@@ -12,6 +12,10 @@ import useGameLogic from "./_hooks/use-game-logic";
 import usePopup from "./_hooks/use-popup";
 import { SubmitResult, Word } from "./_types";
 import { getPerfection } from "./_utils";
+import { setCookie, getCookie, deleteCookie } from "./_utils/cookieUtils";
+import CookieBanner from "./_components/CookieBanner";
+
+const GAME_STATE_COOKIE = "gameState";
 
 export default function Home() {
   const [popupState, showPopup] = usePopup();
@@ -29,6 +33,10 @@ export default function Home() {
     getSubmitResult,
     handleWin,
     handleLoss,
+    setIsWon,
+    setIsLost,
+    setMistakesRemaining,
+    setClearedCategories,
   } = useGameLogic();
 
   const [showGameWonModal, setShowGameWonModal] = useState(false);
@@ -42,6 +50,55 @@ export default function Home() {
     animateGuess,
     animateWrongGuess,
   } = useAnimation();
+
+  useEffect(() => {
+    console.log("Component mounted, checking cookies...");
+    const savedState = getCookie(GAME_STATE_COOKIE);
+    if (savedState) {
+      try {
+        const { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory } = JSON.parse(savedState);
+        console.log("Restoring game state from cookie:", { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory });
+        setIsWon(isWon);
+        setIsLost(isLost);
+        setMistakesRemaining(mistakesRemaining);
+        setClearedCategories(clearedCategories);
+        if (guessHistory) {
+          guessHistoryRef.current = guessHistory;
+        }
+      } catch (error) {
+        console.error("Failed to parse game state from cookie:", error);
+      }
+    }
+
+    const now = new Date();
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 0);
+
+    const timeToMidnight = midnight.getTime() - now.getTime();
+    console.log("Time to midnight:", timeToMidnight);
+
+    const timer = setTimeout(() => {
+      console.log("Deleting cookies at midnight...");
+      deleteCookie(GAME_STATE_COOKIE);
+    }, timeToMidnight);
+
+    return () => {
+      console.log("Clearing timeout...");
+      clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    const gameState = {
+      isWon,
+      isLost,
+      mistakesRemaining,
+      clearedCategories,
+      guessHistory: guessHistoryRef.current,
+    };
+    console.log("Saving game state to cookie:", gameState);
+    setCookie(GAME_STATE_COOKIE, JSON.stringify(gameState),0);
+  }, [clearedCategories, mistakesRemaining, isWon, isLost, guessHistoryRef.current]);
 
   const handleSubmit = async () => {
     setSubmitted(true);
@@ -131,6 +188,7 @@ export default function Home() {
 
   return (
     <>
+      <CookieBanner />
       <div className="flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14 relative">
         <div className="flex items-center my-4 ml-4">
           <h1 className="text-black text-4xl font-semibold">
@@ -148,7 +206,7 @@ export default function Home() {
         <h1 className="text-black mb-4">Составь 4 группы по 4 слова!</h1>
         <div className="relative w-full">
           <Grid
-              words={gameWords}
+              words={gameWords.filter(word => !clearedCategories.some(category => category.items.includes(word.word)))}
               selectedWords={selectedWords}
               onClick={onClickCell}
               clearedCategories={clearedCategories}
