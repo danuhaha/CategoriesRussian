@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { categories } from "../_examples";
 import { Category, SubmitResult, Word } from "../_types";
 import { delay, shuffleArray } from "../_utils";
+import { getCookie } from "../_utils/cookieUtils";
+
+const GAME_STATE_COOKIE = "gameState";
 
 export default function useGameLogic() {
   const [gameWords, setGameWords] = useState<Word[]>([]);
@@ -9,10 +12,26 @@ export default function useGameLogic() {
     () => gameWords.filter((item) => item.selected),
     [gameWords]
   );
-  const [clearedCategories, setClearedCategories] = useState<Category[]>([]);
-  const [isWon, setIsWon] = useState(false);
-  const [isLost, setIsLost] = useState(false);
-  const [mistakesRemaining, setMistakesRemaning] = useState(4);
+  const [clearedCategories, setClearedCategories] = useState<Category[]>(() => {
+    const savedState = getCookie(GAME_STATE_COOKIE);
+    return savedState ? JSON.parse(savedState).clearedCategories : [];
+  });
+
+  const [isWon, setIsWon] = useState(() => {
+    const savedState = getCookie(GAME_STATE_COOKIE);
+    return savedState ? JSON.parse(savedState).isWon : false;
+  });
+
+  const [isLost, setIsLost] = useState(() => {
+    const savedState = getCookie(GAME_STATE_COOKIE);
+    return savedState ? JSON.parse(savedState).isLost : false;
+  });
+
+  const [mistakesRemaining, setMistakesRemaining] = useState(() => {
+    const savedState = getCookie(GAME_STATE_COOKIE);
+    return savedState ? JSON.parse(savedState).mistakesRemaining : 4;
+  });
+
   const guessHistoryRef = useRef<Word[][]>([]);
 
   useEffect(() => {
@@ -93,7 +112,7 @@ export default function useGameLogic() {
   };
 
   const getIncorrectResult = (maxLikeness: number): SubmitResult => {
-    setMistakesRemaning(mistakesRemaining - 1);
+    setMistakesRemaining(mistakesRemaining - 1);
 
     if (mistakesRemaining === 1) {
       return { result: "loss" };
@@ -145,5 +164,9 @@ export default function useGameLogic() {
     getSubmitResult,
     handleLoss,
     handleWin,
+    setIsWon,
+    setIsLost,
+    setMistakesRemaining,
+    setClearedCategories,
   };
 }
