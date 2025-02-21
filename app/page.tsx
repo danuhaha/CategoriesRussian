@@ -56,12 +56,15 @@ export default function Home() {
     const savedState = getCookie(GAME_STATE_COOKIE);
     if (savedState) {
       try {
-        const { isWon, isLost, mistakesRemaining, clearedCategories } = JSON.parse(savedState);
-        console.log("Restoring game state from cookie:", { isWon, isLost, mistakesRemaining, clearedCategories });
+        const { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory } = JSON.parse(savedState);
+        console.log("Restoring game state from cookie:", { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory });
         setIsWon(isWon);
         setIsLost(isLost);
         setMistakesRemaining(mistakesRemaining);
         setClearedCategories(clearedCategories);
+        if (guessHistory) {
+          guessHistoryRef.current = guessHistory;
+        }
       } catch (error) {
         console.error("Failed to parse game state from cookie:", error);
       }
@@ -91,10 +94,11 @@ export default function Home() {
       isLost,
       mistakesRemaining,
       clearedCategories,
+      guessHistory: guessHistoryRef.current,
     };
     console.log("Saving game state to cookie:", gameState);
-    setCookie(GAME_STATE_COOKIE, JSON.stringify(gameState), 1);
-  }, [clearedCategories, mistakesRemaining, isWon, isLost]);
+    setCookie(GAME_STATE_COOKIE, JSON.stringify(gameState),0);
+  }, [clearedCategories, mistakesRemaining, isWon, isLost, guessHistoryRef.current]);
 
   const handleSubmit = async () => {
     setSubmitted(true);

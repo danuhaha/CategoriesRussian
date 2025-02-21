@@ -17,6 +17,7 @@ const config: Config = {
       screens: {
         'xs': '440px',
         'xxs': '380px',
+        'xxxs': '340px',
       },
       fontSize: {
         'xxs': '10px',
