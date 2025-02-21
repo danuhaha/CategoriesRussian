@@ -32,8 +32,11 @@ export default function Cell(props: CellProps) {
   if (charCount == 8) {
     size = "text-xxs xxs:text-xs xs:text-sm md:text-lg";
   }
-  if (charCount > 8) {
+  if (charCount > 8 && charCount < 11)  {
     size = "text-xxxs xxs:text-xxs xs:text-xs md:text-lg";
+  }
+  if (charCount >=11) {
+    size = "text-xxxs xxs:text-xxxs xs:text-xxs md:text-lg";
   }
 
   return (
