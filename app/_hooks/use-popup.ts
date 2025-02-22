@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { delay } from "../_utils";
+'use client';
+import { useState } from 'react';
+import { delay } from '../_utils';
 
 export default function usePopup() {
   const [popupState, setPopupState] = useState({ show: false, message: "" });

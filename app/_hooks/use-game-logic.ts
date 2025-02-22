@@ -1,38 +1,38 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { categories } from "../_examples";
-import { Category, SubmitResult, Word } from "../_types";
-import { delay, shuffleArray } from "../_utils";
-import { getCookie } from "../_utils/cookieUtils";
+'use client';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { categories } from '../_examples';
+import { Category, SubmitResult, Word } from '../_types';
+import { delay, shuffleArray } from '../_utils';
 
-const GAME_STATE_COOKIE = "gameState";
+export const GAME_STATE_STORAGE_ID = 'gameState';
 
 export default function useGameLogic() {
   const [gameWords, setGameWords] = useState<Word[]>([]);
-  const selectedWords = useMemo(
-    () => gameWords.filter((item) => item.selected),
-    [gameWords]
-  );
-  const [clearedCategories, setClearedCategories] = useState<Category[]>(() => {
-    const savedState = getCookie(GAME_STATE_COOKIE);
-    return savedState ? JSON.parse(savedState).clearedCategories : [];
-  });
+  const selectedWords = useMemo(() => gameWords.filter((item) => item.selected), [gameWords]);
+  const [clearedCategories, setClearedCategories] = useState<Category[]>([]);
 
-  const [isWon, setIsWon] = useState(() => {
-    const savedState = getCookie(GAME_STATE_COOKIE);
-    return savedState ? JSON.parse(savedState).isWon : false;
-  });
+  const [isWon, setIsWon] = useState(false);
 
-  const [isLost, setIsLost] = useState(() => {
-    const savedState = getCookie(GAME_STATE_COOKIE);
-    return savedState ? JSON.parse(savedState).isLost : false;
-  });
+  const [isLost, setIsLost] = useState(false);
 
-  const [mistakesRemaining, setMistakesRemaining] = useState(() => {
-    const savedState = getCookie(GAME_STATE_COOKIE);
-    return savedState ? JSON.parse(savedState).mistakesRemaining : 4;
-  });
+  const [mistakesRemaining, setMistakesRemaining] = useState(4);
 
   const guessHistoryRef = useRef<Word[][]>([]);
+
+  useEffect(() => {
+    const savedState = localStorage?.getItem(GAME_STATE_STORAGE_ID);
+
+    if (savedState) {
+      const { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory } = JSON.parse(savedState);
+      setIsWon(isWon);
+      setIsLost(isLost);
+      setMistakesRemaining(mistakesRemaining);
+      setClearedCategories(clearedCategories);
+      if (guessHistory) {
+        guessHistoryRef.current = guessHistory;
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const words: Word[] = categories
@@ -72,9 +72,7 @@ export default function useGameLogic() {
   };
 
   const getSubmitResult = (): SubmitResult => {
-    const sameGuess = guessHistoryRef.current.some((guess) =>
-      guess.every((word) => selectedWords.includes(word))
-    );
+    const sameGuess = guessHistoryRef.current.some((guess) => guess.every((g) => selectedWords.map((i) => i.word).includes(g.word)));
 
     if (sameGuess) {
       console.log("Same!");
