@@ -1,21 +1,17 @@
-"use client";
+'use client';
 
-import { useCallback, useState, useEffect } from "react";
-import ControlButton from "./_components/button/control-button";
-import Grid from "./_components/game/grid";
-import GameLostModal from "./_components/modal/game-lost-modal";
-import GameWonModal from "./_components/modal/game-won-modal";
-import GameRulesModal from "./_components/modal/game-rules-modal";
-import Popup from "./_components/popup";
-import useAnimation from "./_hooks/use-animation";
-import useGameLogic from "./_hooks/use-game-logic";
-import usePopup from "./_hooks/use-popup";
-import { SubmitResult, Word } from "./_types";
-import { getPerfection } from "./_utils";
-import { setCookie, getCookie, deleteCookie } from "./_utils/cookieUtils";
-import CookieBanner from "./_components/CookieBanner";
-
-const GAME_STATE_COOKIE = "gameState";
+import { useCallback, useState, useEffect } from 'react';
+import ControlButton from './_components/button/control-button';
+import Grid from './_components/game/grid';
+import GameLostModal from './_components/modal/game-lost-modal';
+import GameWonModal from './_components/modal/game-won-modal';
+import GameRulesModal from './_components/modal/game-rules-modal';
+import Popup from './_components/popup';
+import useAnimation from './_hooks/use-animation';
+import useGameLogic, { GAME_STATE_STORAGE_ID } from './_hooks/use-game-logic';
+import usePopup from './_hooks/use-popup';
+import { SubmitResult, Word } from './_types';
+import { getPerfection } from './_utils';
 
 export default function Home() {
   const [popupState, showPopup] = usePopup();
@@ -52,12 +48,12 @@ export default function Home() {
   } = useAnimation();
 
   useEffect(() => {
-    console.log("Component mounted, checking cookies...");
-    const savedState = getCookie(GAME_STATE_COOKIE);
+    console.log('Component mounted, checking local storages...');
+    const savedState = localStorage?.getItem(GAME_STATE_STORAGE_ID);
     if (savedState) {
       try {
         const { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory } = JSON.parse(savedState);
-        console.log("Restoring game state from cookie:", { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory });
+        console.log('Restoring game state from local storage:', { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory });
         setIsWon(isWon);
         setIsLost(isLost);
         setMistakesRemaining(mistakesRemaining);
@@ -66,7 +62,7 @@ export default function Home() {
           guessHistoryRef.current = guessHistory;
         }
       } catch (error) {
-        console.error("Failed to parse game state from cookie:", error);
+        console.error('Failed to parse game state from local storage:', error);
       }
     }
 
@@ -78,15 +74,15 @@ export default function Home() {
     console.log("Time to midnight:", timeToMidnight);
 
     const timer = setTimeout(() => {
-      console.log("Deleting cookies at midnight...");
-      deleteCookie(GAME_STATE_COOKIE);
+      console.log('Deleting local storages at midnight...');
+      localStorage?.removeItem(GAME_STATE_STORAGE_ID);
     }, timeToMidnight);
 
     return () => {
       console.log("Clearing timeout...");
       clearTimeout(timer);
     };
-  }, []);
+  }, [guessHistoryRef, setClearedCategories, setIsLost, setIsWon, setMistakesRemaining]);
 
   useEffect(() => {
     const gameState = {
@@ -96,9 +92,9 @@ export default function Home() {
       clearedCategories,
       guessHistory: guessHistoryRef.current,
     };
-    console.log("Saving game state to cookie:", gameState);
-    setCookie(GAME_STATE_COOKIE, JSON.stringify(gameState),0);
-  }, [clearedCategories, mistakesRemaining, isWon, isLost, guessHistoryRef.current]);
+    console.log('Saving game state to local storage:', gameState);
+    localStorage?.setItem(GAME_STATE_STORAGE_ID, JSON.stringify(gameState));
+  }, [clearedCategories, mistakesRemaining, isWon, isLost, guessHistoryRef]);
 
   const handleSubmit = async () => {
     setSubmitted(true);
@@ -188,12 +184,9 @@ export default function Home() {
 
   return (
     <>
-      <CookieBanner />
-      <div className="flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14 relative">
-        <div className="flex items-center my-4 ml-4">
-          <h1 className="text-black text-4xl font-semibold">
-            Категории
-          </h1>
+      <div className='flex flex-col items-center w-11/12 md:w-3/4 lg:w-7/12 mx-auto mt-14 relative'>
+        <div className='flex items-center my-4 ml-4'>
+          <h1 className='text-black text-4xl font-semibold'>Категории</h1>
           <button
               className="relative top-0 right-0 mt-1 ml-2 w-6 h-6 border-2 border-black rounded-full bg-transparent flex justify-center items-center"
               onClick={() => setShowGameRulesModal(true)}

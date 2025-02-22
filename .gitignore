@@ -37,3 +37,57 @@ next-env.d.ts
 
 # vscode
 /.vscode
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist
+dist-test
+tmp
+out
+.webpack
+_cache
+/out-tsc
+storybook-static
+test-results
+test-reports
+playwright-report
+playwright/.cache
+**/playwright/.ga4/
+
+# dependencies
+node_modules
+.nx
+
+# IDEs and editors
+/.idea/*
+!/.idea/runConfigurations
+!/.idea/libraries
+!/.idea/jsLibraryMappings.xml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+.env
+/.sass-cache
+/connect.lock
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+Thumbs.db
+

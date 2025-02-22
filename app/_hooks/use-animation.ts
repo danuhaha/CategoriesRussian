@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { CellAnimationState, Word } from "../_types";
-import { delay } from "../_utils";
+'use client';
+
+import { useState } from 'react';
+import { CellAnimationState, Word } from '../_types';
+import { delay } from '../_utils';
 
 export default function useAnimation() {
   const [guessAnimationState, setGuessAnimationState] =
