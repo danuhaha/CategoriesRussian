@@ -1,5 +1,5 @@
+/*
 import React, { useState, useEffect } from "react";
-import { getCookie, setCookie } from "../_utils/cookieUtils";
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
@@ -32,4 +32,4 @@ export default function CookieBanner() {
       </div>
 
   );
-} 
+} */
