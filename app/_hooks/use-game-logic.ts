@@ -58,6 +58,7 @@ export default function useGameLogic() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const { date, categories } = await response.json();
+            console.log(date)
             console.log('Fetched categories: ', categories);
             setCategoriesParsed(categories);
 
