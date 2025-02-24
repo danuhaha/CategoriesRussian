@@ -7,7 +7,7 @@ type CategoriesByDate = {
 };
 
 export async function GET() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-CA');
     const categoriesParsed = todayCategories as CategoriesByDate;
     const categories = categoriesParsed[today] || [];
 
