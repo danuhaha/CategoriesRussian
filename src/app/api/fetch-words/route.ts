@@ -5,7 +5,7 @@ import { type GameInfo } from 'types';
 import gamesInfo from 'categories.json';
 
 export function GET() {
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Moscow' });
 
   const gameDataToday = (gamesInfo as GameInfo[]).find((gameInfo) => gameInfo.date === today);
 
