@@ -1,15 +1,17 @@
 'use client';
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {categories} from '../_examples';
+//import {categories} from '../_examples';
 import {Category, SubmitResult, Word} from '../_types';
 import {delay, shuffleArray} from '../_utils';
 
 export const GAME_STATE_STORAGE_ID = 'gameState';
+const LAST_DATE_STORAGE_ID = 'lastWordDate';
 
 export default function useGameLogic() {
     const [gameWords, setGameWords] = useState<Word[]>([]);
     const selectedWords = useMemo(() => gameWords.filter((item) => item.selected), [gameWords]);
     const [clearedCategories, setClearedCategories] = useState<Category[]>([]);
+    const [categoriesParsed, setCategoriesParsed] = useState<Category[]>([]);
 
     const [isWon, setIsWon] = useState(false);
 
@@ -34,13 +36,42 @@ export default function useGameLogic() {
         }
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const words: Word[] = categories
             .map((category) =>
                 category.items.map((word) => ({word: word, level: category.level}))
             )
             .flat();
         setGameWords(shuffleArray(words));
+    }, []);*/
+
+    useEffect(() => {
+        const fetchWords = async () => {
+            const response = await fetch('/api/fetch-words');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const { date, categories } = await response.json();
+            console.log('Fetched categories: ', categories);
+            setCategoriesParsed(categories);
+
+            // Check if the stored date is different from today's date.
+            const storedDate = localStorage.getItem(LAST_DATE_STORAGE_ID);
+            if (storedDate !== date) {
+                // Clear local storage game state if the date has changed.
+                localStorage.removeItem(GAME_STATE_STORAGE_ID);
+                localStorage.setItem(LAST_DATE_STORAGE_ID, date);
+            }
+
+            const processedWords: Word[] = categories
+                .map((category: Category) =>
+                    category.items.map((word: string)=> ({word: word, level: category.level}))
+                )
+                .flat();
+            setGameWords(shuffleArray(processedWords));
+        };
+
+        fetchWords();
     }, []);
 
     const selectWord = (word: Word): void => {
@@ -81,7 +112,7 @@ export default function useGameLogic() {
 
         guessHistoryRef.current.push(selectedWords);
 
-        const likenessCounts = categories.map((category) => {
+        const likenessCounts = categoriesParsed.map((category: Category) => {
             return selectedWords.filter((item) => category.items.includes(item.word))
                 .length;
         });
@@ -90,7 +121,7 @@ export default function useGameLogic() {
         const maxIndex = likenessCounts.indexOf(maxLikeness);
 
         if (maxLikeness === 4) {
-            return getCorrectResult(categories[maxIndex]);
+            return getCorrectResult(categoriesParsed[maxIndex]);
         } else {
             return getIncorrectResult(maxLikeness);
         }
@@ -122,8 +153,8 @@ export default function useGameLogic() {
     };
 
     const handleLoss = async () => {
-        const remainingCategories = categories.filter(
-            (category) => !clearedCategories.includes(category)
+        const remainingCategories = categoriesParsed.filter(
+            (category) => !clearedCategories.some((clearedCategory) => clearedCategory.category === category.category)
         );
 
         deselectAllWords();

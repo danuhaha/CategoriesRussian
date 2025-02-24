@@ -71,23 +71,6 @@ export default function Home() {
                 console.error('Failed to parse game state from local storage:', error);
             }
         }
-
-        const now = new Date();
-        const midnight = new Date();
-        midnight.setHours(24, 0, 0, 0);
-
-        const timeToMidnight = midnight.getTime() - now.getTime();
-        console.log("Time to midnight:", timeToMidnight);
-
-        const timer = setTimeout(() => {
-            console.log('Deleting local storages at midnight...');
-            localStorage?.removeItem(GAME_STATE_STORAGE_ID);
-        }, timeToMidnight);
-
-        return () => {
-            console.log("Clearing timeout...");
-            clearTimeout(timer);
-        };
     }, [guessHistoryRef, setClearedCategories, setIsLost, setIsWon, setMistakesRemaining]);
 
     useEffect(() => {
