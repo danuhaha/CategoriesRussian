@@ -47,7 +47,13 @@ export default function useGameLogic() {
 
     useEffect(() => {
         const fetchWords = async () => {
-            const response = await fetch('/api/fetch-words');
+            const apiUrl = process.env.NODE_ENV === 'production'
+                ? '/categories/api/fetch-words'  // Production URL
+                : '/api/fetch-words';            // Local development URL
+
+            const response = await fetch(apiUrl);
+
+            //const response = await fetch('/api/fetch-words');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
