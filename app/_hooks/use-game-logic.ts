@@ -1,170 +1,201 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { categories } from '../_examples';
-import { Category, SubmitResult, Word } from '../_types';
-import { delay, shuffleArray } from '../_utils';
+import {useEffect, useMemo, useRef, useState} from 'react';
+//import {categories} from '../_examples';
+import {Category, SubmitResult, Word} from '../_types';
+import {delay, shuffleArray} from '../_utils';
 
 export const GAME_STATE_STORAGE_ID = 'gameState';
+const LAST_DATE_STORAGE_ID = 'lastWordDate';
 
 export default function useGameLogic() {
-  const [gameWords, setGameWords] = useState<Word[]>([]);
-  const selectedWords = useMemo(() => gameWords.filter((item) => item.selected), [gameWords]);
-  const [clearedCategories, setClearedCategories] = useState<Category[]>([]);
+    const [gameWords, setGameWords] = useState<Word[]>([]);
+    const selectedWords = useMemo(() => gameWords.filter((item) => item.selected), [gameWords]);
+    const [clearedCategories, setClearedCategories] = useState<Category[]>([]);
+    const [categoriesParsed, setCategoriesParsed] = useState<Category[]>([]);
 
-  const [isWon, setIsWon] = useState(false);
+    const [isWon, setIsWon] = useState(false);
 
-  const [isLost, setIsLost] = useState(false);
+    const [isLost, setIsLost] = useState(false);
 
-  const [mistakesRemaining, setMistakesRemaining] = useState(4);
+    const [mistakesRemaining, setMistakesRemaining] = useState(4);
 
-  const guessHistoryRef = useRef<Word[][]>([]);
+    const guessHistoryRef = useRef<Word[][]>([]);
 
-  useEffect(() => {
-    const savedState = localStorage?.getItem(GAME_STATE_STORAGE_ID);
+    useEffect(() => {
+        const savedState = localStorage?.getItem(GAME_STATE_STORAGE_ID);
 
-    if (savedState) {
-      const { isWon, isLost, mistakesRemaining, clearedCategories, guessHistory } = JSON.parse(savedState);
-      setIsWon(isWon);
-      setIsLost(isLost);
-      setMistakesRemaining(mistakesRemaining);
-      setClearedCategories(clearedCategories);
-      if (guessHistory) {
-        guessHistoryRef.current = guessHistory;
-      }
-    }
-  }, []);
+        if (savedState) {
+            const {isWon, isLost, mistakesRemaining, clearedCategories, guessHistory} = JSON.parse(savedState);
+            setIsWon(isWon);
+            setIsLost(isLost);
+            setMistakesRemaining(mistakesRemaining);
+            setClearedCategories(clearedCategories);
+            if (guessHistory) {
+                guessHistoryRef.current = guessHistory;
+            }
+        }
+    }, []);
 
-  useEffect(() => {
-    const words: Word[] = categories
-      .map((category) =>
-        category.items.map((word) => ({ word: word, level: category.level }))
-      )
-      .flat();
-    setGameWords(shuffleArray(words));
-  }, []);
+    /*useEffect(() => {
+        const words: Word[] = categories
+            .map((category) =>
+                category.items.map((word) => ({word: word, level: category.level}))
+            )
+            .flat();
+        setGameWords(shuffleArray(words));
+    }, []);*/
 
-  const selectWord = (word: Word): void => {
-    const newGameWords = gameWords.map((item) => {
-      // Only allow word to be selected if there are less than 4 selected words
-      if (word.word === item.word) {
-        return {
-          ...item,
-          selected: selectedWords.length < 4 ? !item.selected : false,
+    useEffect(() => {
+        const fetchWords = async () => {
+            const response = await fetch('/api/fetch-words');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const { date, categories } = await response.json();
+            console.log('Fetched categories: ', categories);
+            setCategoriesParsed(categories);
+
+            // Check if the stored date is different from today's date.
+            const storedDate = localStorage.getItem(LAST_DATE_STORAGE_ID);
+            if (storedDate !== date) {
+                // Clear local storage game state if the date has changed.
+                localStorage.removeItem(GAME_STATE_STORAGE_ID);
+                localStorage.setItem(LAST_DATE_STORAGE_ID, date);
+            }
+
+            const processedWords: Word[] = categories
+                .map((category: Category) =>
+                    category.items.map((word: string)=> ({word: word, level: category.level}))
+                )
+                .flat();
+            setGameWords(shuffleArray(processedWords));
         };
-      } else {
-        return item;
-      }
-    });
 
-    setGameWords(newGameWords);
-  };
+        fetchWords();
+    }, []);
 
-  const shuffleWords = () => {
-    setGameWords([...shuffleArray(gameWords)]);
-  };
+    const selectWord = (word: Word): void => {
+        const newGameWords = gameWords.map((item) => {
+            // Only allow word to be selected if there are less than 4 selected words
+            if (word.word === item.word) {
+                return {
+                    ...item,
+                    selected: selectedWords.length < 4 ? !item.selected : false,
+                };
+            } else {
+                return item;
+            }
+        });
 
-  const deselectAllWords = () => {
-    setGameWords(
-      gameWords.map((item) => {
-        return { ...item, selected: false };
-      })
-    );
-  };
+        setGameWords(newGameWords);
+    };
 
-  const getSubmitResult = (): SubmitResult => {
-    const sameGuess = guessHistoryRef.current.some((guess) => guess.every((g) => selectedWords.map((i) => i.word).includes(g.word)));
+    const shuffleWords = () => {
+        setGameWords([...shuffleArray(gameWords)]);
+    };
 
-    if (sameGuess) {
-      console.log("Same!");
-      return { result: "same" };
-    }
+    const deselectAllWords = () => {
+        setGameWords(
+            gameWords.map((item) => {
+                return {...item, selected: false};
+            })
+        );
+    };
 
-    guessHistoryRef.current.push(selectedWords);
+    const getSubmitResult = (): SubmitResult => {
+        const sameGuess = guessHistoryRef.current.some((guess) => guess.every((g) => selectedWords.map((i) => i.word).includes(g.word)));
 
-    const likenessCounts = categories.map((category) => {
-      return selectedWords.filter((item) => category.items.includes(item.word))
-        .length;
-    });
+        if (sameGuess) {
+            console.log("Same!");
+            return {result: "same"};
+        }
 
-    const maxLikeness = Math.max(...likenessCounts);
-    const maxIndex = likenessCounts.indexOf(maxLikeness);
+        guessHistoryRef.current.push(selectedWords);
 
-    if (maxLikeness === 4) {
-      return getCorrectResult(categories[maxIndex]);
-    } else {
-      return getIncorrectResult(maxLikeness);
-    }
-  };
+        const likenessCounts = categoriesParsed.map((category: Category) => {
+            return selectedWords.filter((item) => category.items.includes(item.word))
+                .length;
+        });
 
-  const getCorrectResult = (category: Category): SubmitResult => {
-    setClearedCategories([...clearedCategories, category]);
-    setGameWords(
-      gameWords.filter((item) => !category.items.includes(item.word))
-    );
+        const maxLikeness = Math.max(...likenessCounts);
+        const maxIndex = likenessCounts.indexOf(maxLikeness);
 
-    if (clearedCategories.length === 3) {
-      return { result: "win" };
-    } else {
-      return { result: "correct" };
-    }
-  };
+        if (maxLikeness === 4) {
+            return getCorrectResult(categoriesParsed[maxIndex]);
+        } else {
+            return getIncorrectResult(maxLikeness);
+        }
+    };
 
-  const getIncorrectResult = (maxLikeness: number): SubmitResult => {
-    setMistakesRemaining(mistakesRemaining - 1);
+    const getCorrectResult = (category: Category): SubmitResult => {
+        setClearedCategories([...clearedCategories, category]);
+        setGameWords(
+            gameWords.filter((item) => !category.items.includes(item.word))
+        );
 
-    if (mistakesRemaining === 1) {
-      return { result: "loss" };
-    } else if (maxLikeness === 3) {
-      return { result: "one-away" };
-    } else {
-      return { result: "incorrect" };
-    }
-  };
+        if (clearedCategories.length === 3) {
+            return {result: "win"};
+        } else {
+            return {result: "correct"};
+        }
+    };
 
-  const handleLoss = async () => {
-    const remainingCategories = categories.filter(
-      (category) => !clearedCategories.includes(category)
-    );
+    const getIncorrectResult = (maxLikeness: number): SubmitResult => {
+        setMistakesRemaining(mistakesRemaining - 1);
 
-    deselectAllWords();
+        if (mistakesRemaining === 1) {
+            return {result: "loss"};
+        } else if (maxLikeness === 3) {
+            return {result: "one-away"};
+        } else {
+            return {result: "incorrect"};
+        }
+    };
 
-    for (const category of remainingCategories) {
-      await delay(1000);
-      setClearedCategories((prevClearedCategories) => [
-        ...prevClearedCategories,
-        category,
-      ]);
-      setGameWords((prevGameWords) =>
-        prevGameWords.filter((item) => !category.items.includes(item.word))
-      );
-    }
+    const handleLoss = async () => {
+        const remainingCategories = categoriesParsed.filter(
+            (category) => !clearedCategories.some((clearedCategory) => clearedCategory.category === category.category)
+        );
 
-    await delay(1000);
-    setIsLost(true);
-  };
+        deselectAllWords();
 
-  const handleWin = async () => {
-    await delay(1000);
-    setIsWon(true);
-  };
+        for (const category of remainingCategories) {
+            await delay(1000);
+            setClearedCategories((prevClearedCategories) => [
+                ...prevClearedCategories,
+                category,
+            ]);
+            setGameWords((prevGameWords) =>
+                prevGameWords.filter((item) => !category.items.includes(item.word))
+            );
+        }
 
-  return {
-    gameWords,
-    selectedWords,
-    clearedCategories,
-    mistakesRemaining,
-    isWon,
-    isLost,
-    guessHistoryRef,
-    selectWord,
-    shuffleWords,
-    deselectAllWords,
-    getSubmitResult,
-    handleLoss,
-    handleWin,
-    setIsWon,
-    setIsLost,
-    setMistakesRemaining,
-    setClearedCategories,
-  };
+        await delay(1000);
+        setIsLost(true);
+    };
+
+    const handleWin = async () => {
+        await delay(1000);
+        setIsWon(true);
+    };
+
+    return {
+        gameWords,
+        selectedWords,
+        clearedCategories,
+        mistakesRemaining,
+        isWon,
+        isLost,
+        guessHistoryRef,
+        selectWord,
+        shuffleWords,
+        deselectAllWords,
+        getSubmitResult,
+        handleLoss,
+        handleWin,
+        setIsWon,
+        setIsLost,
+        setMistakesRemaining,
+        setClearedCategories,
+    };
 }
