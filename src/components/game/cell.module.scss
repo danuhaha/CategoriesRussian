@@ -1,0 +1,32 @@
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+.bounceAnimation {
+  animation: bounce 1.5s ease-in-out;
+}
+
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0ee 0, #fff 0, #f0f0ee 100px);
+  background-size: 200%;
+  animation: loader 1s infinite reverse;
+  cursor: default;
+
+  @keyframes loader {
+    from {
+      background-position: -100% 0;
+    }
+
+    to {
+      background-position: 100% 0;
+    }
+  }
+}
