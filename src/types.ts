@@ -30,8 +30,3 @@ export enum SubmitResult {
   Loss = 'loss',
   Win = 'win',
 }
-
-export interface CellAnimationState {
-  readonly show: boolean;
-  readonly index: number;
-}
