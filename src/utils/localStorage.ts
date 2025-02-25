@@ -16,6 +16,10 @@ const getFetchResponseHash = (response: GameInfo) => {
   return hash(JSON.stringify(response));
 };
 
+export const getGameSavedDate = () => {
+  return localStorage.getItem(LAST_DATE_STORAGE_ID);
+};
+
 export const getOrCleanGameLocalSavedState = (gameInfo: GameInfo) => {
   const savedDate = localStorage.getItem(LAST_DATE_STORAGE_ID);
   const savedHash = localStorage.getItem(LAST_GAME_DATA_HASH);

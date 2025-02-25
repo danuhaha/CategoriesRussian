@@ -7,7 +7,7 @@ interface GuessHistoryProps {
 
 export default function GuessHistory(props: GuessHistoryProps) {
   return (
-    <div className='grid grid-cols-4 gap-y-1 mb-12'>
+    <div className='grid grid-cols-4 gap-y-1 mb-6'>
       {props.guessHistory.map((guesses) =>
         guesses.map((word, index) => (
           <div

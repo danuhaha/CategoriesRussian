@@ -42,12 +42,14 @@ export const useGameLogic = () => {
           setMistakesRemaining(localSavedState.mistakesRemaining);
           setOpenedCategories(localSavedState.openedCategories);
           setUnopenedCategories(localSavedState.unopenedCategories);
-          setUnopenedGameWords(flatCategoriesToWords(localSavedState.unopenedCategories));
+
+          const unopenedWords = shuffleArray(flatCategoriesToWords(localSavedState.unopenedCategories));
+          setUnopenedGameWords(unopenedWords);
           setGuessHistory(localSavedState.guessHistory);
         } else {
           // starting new game
-          const unopenedWords = flatCategoriesToWords(shuffleArray(gameInfo.categories));
-          setUnopenedGameWords(shuffleArray(unopenedWords));
+          const unopenedWords = shuffleArray(flatCategoriesToWords(gameInfo.categories));
+          setUnopenedGameWords(unopenedWords);
           setUnopenedCategories(gameInfo.categories);
           setStatus(GameStatus.Default);
         }
@@ -58,12 +60,8 @@ export const useGameLogic = () => {
   }, []);
 
   const openCategory = useCallback((category: Category) => {
-    setUnopenedCategories((prevState) => prevState.filter((item) => item.categoryTitle.toLowerCase() !== category.categoryTitle.toLowerCase()));
-    setUnopenedGameWords((prevState) =>
-      prevState.filter(({ word, level }) =>
-        category.words.some((openedCategoryWord) => word.toLowerCase() === openedCategoryWord.toLowerCase() && level === category.level),
-      ),
-    );
+    setUnopenedCategories((prevState) => prevState.filter((item) => item.level !== category.level));
+    setUnopenedGameWords((prevState) => prevState.filter(({ level }) => level !== category.level));
     setOpenedCategories((prevState) => [...prevState, category]);
   }, []);
 

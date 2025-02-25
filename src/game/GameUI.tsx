@@ -38,7 +38,7 @@ export const GameUI = ({ showModalAction, showPopupAction }: GameProps) => {
   }, [disclosedCategories, isGameEnded, finishedGameAnimationPlaying, openedCategories, unopenedCategories]);
 
   const shownWords = useMemo(() => {
-    return unopenedGameWords.filter(({ word }) => !shownCategories.some((category) => category.words.includes(word)));
+    return unopenedGameWords.filter(({ level }) => !shownCategories.some((category) => category.level === level));
   }, [unopenedGameWords, shownCategories]);
 
   const onCellClick = useCallback((word: Word) => {
@@ -54,8 +54,6 @@ export const GameUI = ({ showModalAction, showPopupAction }: GameProps) => {
   }, []);
 
   const handleLoss = useCallback(async () => {
-    setSelectedWords([]);
-
     for (const category of unopenedCategories) {
       await delay(ANIMATION_WAIT_CATEGORY_OPEN);
       setDisclosedCategories((prevDisclosedCategories) => [...prevDisclosedCategories, category]);
@@ -83,15 +81,21 @@ export const GameUI = ({ showModalAction, showPopupAction }: GameProps) => {
           break;
 
         case SubmitResult.Loss:
+          setSelectedWords([]);
           setFinishedGameAnimationPlaying(true);
           showPopupAction('Повезет в другой раз!');
           void handleLoss().then(() => setFinishedGameAnimationPlaying(false));
           break;
 
         case SubmitResult.Win:
+          setSelectedWords([]);
           setFinishedGameAnimationPlaying(true);
           showPopupAction(getPerfection(mistakesRemaining));
           delay(ANIMATION_WAIT_CATEGORY_OPEN).then(() => setFinishedGameAnimationPlaying(false));
+          break;
+
+        case SubmitResult.Correct:
+          setSelectedWords([]);
           break;
 
         case SubmitResult.Incorrect:
@@ -173,8 +177,9 @@ export const GameUI = ({ showModalAction, showPopupAction }: GameProps) => {
           wrongGuessAnimationState={wrongGuessAnimationState}
         />
       </div>
+
       <h2 className='text-black my-4 md:my-8 mx-8'>
-        Попыток осталось: {mistakesRemaining > 0 && status === GameStatus.Default ? Array(mistakesRemaining).fill('✦') : ''}
+        {status !== GameStatus.Error && status !== GameStatus.Loading ? `Попыток осталось: ${Array(mistakesRemaining).fill('✦').join('')}` : '\u00A0'}
       </h2>
 
       {controlButtons}
