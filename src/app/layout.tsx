@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import './globals.css';
 import React from 'react';
+import { BASE_PATH } from 'config';
 
 const roboto = Roboto({
   subsets: ['latin', 'cyrillic'], // Include Cyrillic subset for Russian
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
   description: 'Составь 4 группы по 4 слова!',
   metadataBase: new URL('https://games.onthewifi.com/categories'),
   icons: {
-    icon: 'icon.ico',
-    apple: 'apple-icon.png',
+    icon: `${BASE_PATH}/icon.ico`,
+    apple: `${BASE_PATH}/apple-icon.png`,
   },
   openGraph: {
     title: 'Категории',
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     siteName: 'Категории',
     images: [
       {
-        url: '/opengraph-image.png',
+        url: `${BASE_PATH}/opengraph-image.png`,
         width: 1200,
         height: 630,
       },

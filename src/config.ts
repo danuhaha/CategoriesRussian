@@ -1,5 +1,6 @@
 // api routes
-export const API_FETCH_WORDS_ROUTE = '/api/fetch-words';
+export const BASE_PATH = '/categories';
+export const API_FETCH_WORDS_ROUTE = `${BASE_PATH}/api/fetch-words`;
 
 // localStorage IDs
 export const GAME_STATE_STORAGE_ID = 'gameState';
