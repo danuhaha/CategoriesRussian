@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "date": {
+        "type": "string",
+        "format": "date",
+        "pattern": "^(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+        "description": "The date when the categories should be shown, in YYYY-MM-DD format"
+      },
+      "categories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "categoryTitle": {
+              "type": "string",
+              "description": "The category title"
+            },
+            "words": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "An word in the category"
+              },
+              "description": "List of words for the game category",
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "level": {
+              "type": "integer",
+              "description": "The difficulty level of the category (from low to high)",
+              "minimum": 1,
+              "maximum": 4
+            }
+          },
+          "required": [
+            "categoryTitle",
+            "words",
+            "level"
+          ],
+          "additionalProperties": false
+        },
+        "description": "Game categories for a specific date.",
+        "minItems": 4,
+        "maxItems": 4
+      }
+    },
+    "required": [
+      "date",
+      "categories"
+    ],
+    "additionalProperties": false
+  }
+}
